@@ -6,7 +6,6 @@ from typing import List
 
 import matplotlib.pyplot as plt
 import pandas as pd
-import zstandard as zstd
 from qmplot import manhattanplot
 from scipy.stats.distributions import chi2
 
@@ -24,14 +23,7 @@ def chi2_pvalue(ustat: int | float, vstat: int | float) -> float:
 
 def load_metadata(metadata_path: Path):
     with CompressedBytesReader(metadata_path) as f:
-        decompressor = zstd.ZstdDecompressor()
-        # compressed_data = f.read()
-        # decompressed_data = decompressor.decompress(compressed_data)
-        # stream_reader = decompressor.stream_reader(compressed_data)
-        with decompressor.stream_reader(f) as reader:
-            decompressed_data = reader.read()
-            reader.close()
-            metadata = pickle.loads(decompressed_data)
+        metadata = pickle.load(f)
     return metadata
 
 
